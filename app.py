@@ -1,10 +1,12 @@
-from fastapi import FastAPI,Depends,status,HTTPException
-from fastapi.security import HTTPBasic, HTTPBasicCredentials
-from fastapi.openapi.docs import get_swagger_ui_html
 import os
 import secrets
 import uvicorn
+from fastapi import FastAPI,Depends,status,HTTPException
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from contextlib import asynccontextmanager
+from fastapi.openapi.docs import get_swagger_ui_html
 from src.config.config import PORT
+from src.cronjob.reddit_cronjob import run_reddit_cronjob
 
 
 VALID_USERNAME = os.getenv('SWAGGER_USERNAME')
@@ -12,7 +14,16 @@ VALID_PASSWORD = os.getenv('SWAGGER_PASSWORD')
 SWAGGER_LOCKED = os.getenv('SWAGGER_LOCKED',"true")
 
 
-app = FastAPI(docs_url=None, redoc_url=None)
+
+    
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    run_reddit_cronjob()
+    
+    yield
+
+
+app = FastAPI(docs_url=None, redoc_url=None,lifespan=lifespan)
 
 
 security = HTTPBasic()

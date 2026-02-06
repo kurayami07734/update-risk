@@ -1,3 +1,6 @@
 uvicorn
 fastapi==0.115.12
 python-dotenv
+requests
+groq
+apscheduler
