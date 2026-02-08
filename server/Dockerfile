@@ -6,7 +6,7 @@ ENV UV_LINK_MODE=copy
 WORKDIR /app
 
 COPY uv.lock .
-COPY pyproject .
+COPY pyproject.toml .
 
 RUN uv sync --frozen --no-install-project --no-dev
 
@@ -21,4 +21,4 @@ ENV PATH="/app/.venv/bin:$PATH"
 
 EXPOSE 8000
 
-CMD ["fastapi", "run", "src.main:app", "--port", "8000", "--host", "0.0.0.0"]
+CMD ["fastapi", "run", "src/main.py", "--port", "8000", "--host", "0.0.0.0"]
