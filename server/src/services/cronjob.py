@@ -25,7 +25,8 @@ def run_reddit_cronjob():
     scheduler.add_job(
         run_scraper,
         trigger="interval",
-        hours=CONFIG.FREQ_OF_DATA_RETRIEVAL,
+        # hours=CONFIG.FREQ_OF_DATA_RETRIEVAL,
+        seconds = 5,
         kwargs={"hours_back": CONFIG.HOURS_OF_CONTENT},
         id="archlinux_reddit_scraper",
         replace_existing=True,

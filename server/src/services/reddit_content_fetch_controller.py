@@ -70,10 +70,11 @@ def extract_comments(children, lines, indent=""):
                 indent + "     "
             )
 
-
 def fetch_post_content(post):
-    url = f"https://www.reddit.com{post['permalink']}.json"
-    resp = requests.get(url, headers=HEADERS, timeout=10)
+    post_url = f"https://www.reddit.com{post['permalink']}"
+
+    api_url = f"{post_url}.json"
+    resp = requests.get(api_url, headers=HEADERS, timeout=10)
     resp.raise_for_status()
     data = resp.json()
 
@@ -99,8 +100,10 @@ def fetch_post_content(post):
         extract_comments(comment_tree, lines)
 
     return {
-        "content": "\n".join(lines)
+        "content": "\n".join(lines),
+        "url": post_url
     }
+
 
 
 
