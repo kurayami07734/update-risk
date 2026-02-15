@@ -1,4 +1,4 @@
-import json
+import asyncio
 
 from apscheduler.schedulers.background import BackgroundScheduler
 
@@ -7,15 +7,20 @@ from src.services.reddit_content_fetch_controller import (
     build_content_json,
 )
 from src.config import CONFIG
-
+from src.controllers.data_extraction_controller import reddit_data_extraction
 
 scheduler = BackgroundScheduler(timezone="UTC")
 
 
-def run_scraper(hours_back: int):
+async def run_scraper_async(hours_back: int):
     posts = fetch_posts_last_xh(hours_back)
     data = build_content_json(posts)
-    print(json.dumps(data, indent=2))
+    response = await reddit_data_extraction(data)
+    print("Final Resp:",response)
+
+
+def run_scraper(hours_back: int):
+    asyncio.run(run_scraper_async(hours_back))
 
 
 def run_reddit_cronjob():
@@ -25,8 +30,7 @@ def run_reddit_cronjob():
     scheduler.add_job(
         run_scraper,
         trigger="interval",
-        # hours=CONFIG.FREQ_OF_DATA_RETRIEVAL,
-        seconds = 5,
+        seconds=10,
         kwargs={"hours_back": CONFIG.HOURS_OF_CONTENT},
         id="archlinux_reddit_scraper",
         replace_existing=True,
