@@ -31,7 +31,8 @@ def run_reddit_cronjob():
     scheduler.add_job(
         run_scraper,
         trigger="interval",
-        seconds=30,
+        # seconds=30,
+        hours = 1,
         kwargs={"hours_back": CONFIG.HOURS_OF_CONTENT},
         id="archlinux_reddit_scraper",
         replace_existing=True,

@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     MONGO_URI: str
     MONGO_DB_NAME: str
 
-    HOURS_OF_CONTENT: int = 5
+    HOURS_OF_CONTENT: int = 1
     FREQ_OF_DATA_RETRIEVAL: int = 5
     
     
