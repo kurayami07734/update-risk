@@ -14,6 +14,7 @@ scheduler = BackgroundScheduler(timezone="UTC")
 
 async def run_scraper_async(hours_back: int):
     posts = fetch_posts_last_xh(hours_back)
+    # print(posts)
     data = build_content_json(posts)
     response = await reddit_data_extraction(data)
     print("Final Resp:",response)
@@ -30,7 +31,7 @@ def run_reddit_cronjob():
     scheduler.add_job(
         run_scraper,
         trigger="interval",
-        seconds=10,
+        seconds=30,
         kwargs={"hours_back": CONFIG.HOURS_OF_CONTENT},
         id="archlinux_reddit_scraper",
         replace_existing=True,
